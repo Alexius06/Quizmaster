@@ -1,0 +1,43 @@
+:root{
+    font-family: "Reem Kufi", sans-serif;
+    background-image: url(./end.jpg);
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: space-around;
+    font-size: 62.5%;
+    
+}
+.body{
+    width: 100vw;
+    height: 100vh;
+}
+
+.container  {
+    width: 100vw;
+    height: 100vh;
+    
+    max-width: 80rem;
+    padding: 2rem;
+    
+}
+.summary-container{
+    background: radial-gradient(ellipse at bottom left, #007be0, #0089eaec, #669cff, #0078da, #2a75ff);
+    border-radius: 20px 20px 0 0;
+    height: fit-content;
+    justify-content: flex-start;
+    
+}
+.selected{
+    background-color: #2a75ff;
+    border: red;
+    color: white;   
+
+}
+.first-row{
+    border-radius: 20px 0 20px 0;
+}
+.second-row{
+    border-radius: 0 20px 0 20px;
+    background-color: white;
+}

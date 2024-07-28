@@ -1,0 +1,99 @@
+:root {
+  font-family: "Reem Kufi", sans-serif;
+  font-size: 62.5%;
+  
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(ellipse at bottom left, #112277, #016fb9, #22AED1, #016fb9, #4FDFF3);
+}
+.container{
+    height: fit-content; 
+}
+.body {
+  margin: 0;
+  
+  width: inherit;
+  display: flex;
+  flex-direction: column;
+  background-image: url('./bg3.jpg');
+  background-repeat: no-repeat;
+  background-size: cover; /* Ensure the background image covers the entire viewport */
+  background-position: center center; /* Center the background image horizontally and vertically */
+  position: relative;
+  border-radius: 20px;
+  z-index: 1;
+}
+#correction{
+    width: inherit;
+}
+.btn{
+    width: 10%; 
+    height: 10%;
+    border-radius: 250px;
+    background-color: transparent;
+}
+#game{
+    height: fit-content;
+    width: i;
+}
+.choice-container{
+    margin-bottom: 1rem;
+    width: inhe; 
+    font-size: 1.8rem;
+    border: 0.1rem  solid   rgb(25, 50, 92);
+    border-radius: 1.5rem;  
+}
+.choice-container:hover{
+    cursor: pointer;
+    box-shadow: 0 0.4rem 1.4rem 0  rgba(246, 246, 246, 0.899);
+    transform: translateY(-00.1rem);
+    transition: transform  150ms;
+}
+
+.choice-prefix{
+    padding: 1.5rem 2.5rem;
+    border-top-left-radius: 1.5rem;
+    border-bottom-left-radius: 1.5rem;
+    background-color: #016fb9;
+}
+
+.choice-text{
+    padding: 1.5rem;
+    width: 100%;
+}
+.selected{
+    box-shadow: 0 0.4rem 1.4rem 0 #00368c ;
+    transform: translateY(-00.1rem);
+    transition: transform  150ms;
+    border-radius: 1.5rem;    
+}
+
+
+.selected:hover{
+    box-shadow: 0 0.4rem 1.4rem 0 #00368c ;
+    transform: translateY(-00.1rem);
+    transition: transform  150ms;    
+}
+
+
+
+#hud{
+    width: inherit;
+}
+#progress-bar{
+    width: 350px;
+    height: 3rem;
+    border: 0.3rem solid  #56a5eb;
+    border-radius: 10px;
+}
+#progress-bar-full{
+    height: 2.8rem;
+    background-color: #56a5eb;   
+    border-radius: 8px;
+    
+}
+
