@@ -1,0 +1,58 @@
+:root{
+    font-family: "Reem Kufi", sans-serif;
+    background: radial-gradient(ellipse at bottom left, #112277, #016fb9, #22AED1,#016fb9, #4FDFF3);
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: space-around;
+    font-size: 62.5%;
+    width: ;
+    
+}
+.{
+    box-sizing: border-box;
+    font-family: "Reem Kufi", sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+
+.home{
+    height: 10%;
+}
+h1 {
+    font-size: 5.4rem; 
+    color: #3a559a;
+    
+}
+
+h1> span {
+    font-size: 2.4rem;
+    font-weight: 500;
+}
+h2{  
+    font-size: 4.2rem;
+    margin-bottom: 4rem;
+    font-weight: 700;
+}
+h3{  
+    font-size: 2.8rem;
+    font-weight: 500;
+}
+
+.container  {
+    width: 100vw;
+    height: 70rem;
+    
+    max-width: 80rem;
+    padding: 2rem;
+    
+}
+.selectedpp { 
+    border: solid 1px black
+    
+};
+
+
+
