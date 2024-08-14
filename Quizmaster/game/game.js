@@ -25,7 +25,7 @@ fetch('https://opentdb.com/api.php?amount=50&category=18&difficulty=medium&type=
         return res.json();
     })
     .then((loadedQuestions) => {
-        console.log(loadedQuestions.results)
+        // console.log(loadedQuestions.results)
         questions = loadedQuestions.results.map((loadedQuestion) => {
             const formattedQuestion = {
                 question: loadedQuestion.question,
@@ -45,10 +45,10 @@ fetch('https://opentdb.com/api.php?amount=50&category=18&difficulty=medium&type=
             
             return formattedQuestion;
         });
-        setInterval(() => { 
+        setTimeout(() => { 
             loader.classList.add('hidden'); 
             game.classList.remove('hidden');   
-            startGame();
+            startGame();    
         },4000); 
         
     })
@@ -220,18 +220,18 @@ options.forEach((option) => {
             
             counter++;  
             incrementScore(CORRECT_BONUS);
-            console.log(counter);    
+            // console.log(counter);    
             localStorage.setItem('counter', counter);         
         }      
         else  if(selectedAnswer !==  currentQuestion.answer){
             let questionNumber = questionCounter;
             let correctAnswer = currentQuestion['choice' + currentQuestion.answer];
-            console.log(correctAnswer);
-            console.log(questionNumber);                
+            // console.log(correctAnswer);
+            // console.log(questionNumber);                
             incorrectQuestions.push(questionNumber);
             correctAnswers.push(correctAnswer);
-            console.log(correctAnswers); 
-            console.log(incorrectQuestions);                            
+            // console.log(correctAnswers); 
+            // console.log(incorrectQuestions);                            
             localStorage.setItem('incorrectQuestions', JSON.stringify(incorrectQuestions));
             localStorage.setItem('correctAnswers', JSON.stringify(correctAnswers));
         }
