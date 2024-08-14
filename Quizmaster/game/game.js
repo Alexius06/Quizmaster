@@ -162,7 +162,8 @@ getNewQuestion = () => {
 };
 function renderQuestion() {
     Questioncount.innerHTML = questionIndex + "/" + MAX_QUESTIONS;    
-    progressbarfull.innerHTML = roundUp(questionCounter / MAX_QUESTIONS) * 100 + "%";
+    progressbarfull.innerHTML = Math.ceil(roundUp(questionCounter / MAX_QUESTIONS) * 100) + "%";
+    
     // console.log(questionCounter/ MAX_QUESTIONS )
 
     question.innerText = currentQuestion.question;
