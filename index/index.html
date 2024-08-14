@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizMaster</title>
+    <link rel="icon" type="image/png" href="../Qlogo.png">    
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="app.css"  rel="stylesheet" >
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400..700&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <div id="home" class="container  text-center  items-center grid md:grid-cols-2 grid-cols-auto   justify-center  ">
+        <h1 class="">QuizMaster!</h1>
+        <div  class=" home flex flex-col  justify-between">
+            
+            <button id="play" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Play</button>
+            <button  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50" href="#">High Scores</button>
+        </div>  
+
+        
+    </div>
+    <div id="profileSetup" class="container  text-center items-center grid md:grid-cols-2 grid-cols-1  hidden justify-center  " >
+        
+        <h1  class="h-full flex justify-center items-end md:items-center"><i  id="backbtn" class="fa-regular fa-circle-left text-6xl pb-9 md:p-0 "></i>Register!</h1>
+        <div id="register"  class="flex  flex-col bg-white justify-start md:justify-center rounded items-start  h-fit  p-3  " >
+            <label  class="m-4">Name:</label>
+            <input type="text"  id="nameInput" name=""  placeholder="Enter your  name" class="rounded h-10 items-center  p-3  border  w-full">
+            <label class="m-4">Choose your  Profile picture: </label>
+            <div class=" grid place-items-center  w-full grid-cols-3 gap-3">
+                <img src="../Assets/pic-1.png" class="w-16 h-16 rounded-full Profile" data-pic="../Assets/pic-1.png">
+                <img src="../Assets/pic-2.png" class="w-16 h-16 rounded-full Profile" data-pic="../Assets/pic-2.png">
+                <img src="../Assets/pic-3.png" class="w-16 h-16 rounded-full Profile" data-pic="../Assets/pic-3.png">
+                <img src="../Assets/pic-4.png" class="w-16 h-16 rounded-full Profile" data-pic="../Assets/pic-4.png">
+                <img src="../Assets/pic-5.png" class="w-16 h-16 rounded-full Profile" data-pic="../Assets/pic-5.png">
+                <img src="../Assets/pic-6.png" class="w-16 h-16 rounded-full Profile" data-pic="../Assets/pic-6.png">
+                    
+            </div>
+            <div  id="regerror" class="w-full flex justify-center items-center underline  text-red-500"></div>
+            <div  class="w-full flex m-4  ml-0 justify-center">
+                <button  id="save" class="text-center h-8 flex items-center w-fit pl-4 pr-4 pt-2 pb-2 rounded  justify-center border">
+                    Register
+                </button> 
+            </div>
+             
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

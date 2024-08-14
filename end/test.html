@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.1/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .hidden {
+            display: none;
+        }
+        .profile-picture {
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .profile-picture.selected {
+            border: 2px solid blue;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div id="start-page" class="text-center">
+        <h1 class="text-2xl mb-4">Enter your name and choose a profile picture</h1>
+        <input type="text" id="user-name" placeholder="Enter your name" class="mb-4 p-2 border border-gray-300 rounded">
+        <div class="flex justify-center mb-4">
+            <img src="./end.jpg" class="profile-picture w-16 h-16 mx-2  rounded" data-index="1">
+            <img src="./end.jpg" class="profile-picture w-16 h-16 mx-2" data-index="2">
+            <img src="./end.jpg" class="profile-picture w-16 h-16 mx-2" data-index="3">
+            <img src="./end.jpg" class="profile-picture w-16 h-16 mx-2" data-index="4">
+            <img src="../game/bg3.jpg" class="profile-picture w-16 h-16 mx-2" data-index="5">
+            <img src="../game/bg3.jpg" class="profile-picture w-16 h-16 mx-2" data-index="6">
+            <img src="../Qlogo.png" class="profile-picture w-16 h-16 mx-2" data-index="7">
+            <img src="../Qlogo.png" class="profile-picture w-16 h-16 mx-2" data-index="8">
+        </div>
+        <button id="start-quiz" class="px-4 py-2 bg-blue-500 text-white rounded">Start Quiz</button>
+    </div>
+
+    <div id="quiz-page" class="hidden">
+        <div class="flex justify-between items-center mb-4">
+            <div id="user-info" class="flex items-center">
+                <img id="profile-pic" src="" alt="Profile Picture" class="w-12 h-12 rounded-full mr-2">
+                <span id="user-name-display" class="text-lg font-semibold"></span>
+            </div>
+            <div id="progress-bar" class="w-2/5 bg-gray-200 h-4 rounded">
+                <div id="progress-bar-full" class="bg-blue-500 h-4 rounded"></div>
+            </div>
+        </div>
+
+        <div id="questions-section" class="mb-4">
+            <div id="question-bubbles" class="flex justify-center mb-4"></div>
+            <div id="question-container" class="text-center">
+                <h2 id="question-text" class="text-2xl mb-4"></h2>
+                <div id="options" class="flex justify-center">
+                    <!-- Options will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-between">
+            <button id="prev-question" class="px-4 py-2 bg-gray-500 text-white rounded">Previous</button>
+            <button id="next-question" class="px-4 py-2 bg-blue-500 text-white rounded">Next</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let currentQuestion = 0;
+            const questions = [
+                { text: "Question 1", options: ["Option 1", "Option 2", "Option 3", "Option 4"], correct: 1 },
+                { text: "Question 2", options: ["Option 1", "Option 2", "Option 3", "Option 4"], correct: 2 },
+                // Add more questions as needed
+            ];
+
+            const startPage = document.getElementById('start-page');
+            const quizPage = document.getElementById('quiz-page');
+            const userNameInput = document.getElementById('user-name');
+            const profilePictures = document.querySelectorAll('.profile-picture');
+            let selectedProfileIndex = null;
+
+            profilePictures.forEach(picture => {
+                picture.addEventListener('click', () => {
+                    profilePictures.forEach(pic => pic.classList.remove('selected'));
+                    picture.classList.add('selected');
+                    selectedProfileIndex = picture.dataset.index;
+                });
+            });
+
+            document.getElementById('start-quiz').addEventListener('click', () => {
+                const userName = userNameInput.value.trim();
+                if (userName && selectedProfileIndex) {
+                    document.getElementById('user-name-display').textContent = userName;
+                    document.getElementById('profile-pic').src = `profile${selectedProfileIndex}.png`;
+                    startPage.classList.add('hidden');
+                    quizPage.classList.remove('hidden');
+                    loadQuestion();
+                } else {
+                    alert('Please enter your name and select a profile picture.');
+                }
+            });
+
+            function loadQuestion() {
+                const question = questions[currentQuestion];
+                document.getElementById('question-text').textContent = question.text;
+                const optionsContainer = document.getElementById('options');
+                optionsContainer.innerHTML = '';
+                question.options.forEach((option, index) => {
+                    const optionButton = document.createElement('button');
+                    optionButton.classList.add('px-4', 'py-2', 'bg-gray-300', 'rounded', 'm-2');
+                    optionButton.textContent = option;
+                    optionButton.addEventListener('click', () => {
+                        handleOptionClick(index);
+                    });
+                    optionsContainer.appendChild(optionButton);
+                });
+
+                updateQuestionBubbles();
+                updateProgressBar();
+            }
+
+            function handleOptionClick(selectedIndex) {
+                const question = questions[currentQuestion];
+                if (selectedIndex === question.correct) {
+                    alert('Correct!');
+                } else {
+                    alert(`Incorrect! The correct answer is: ${question.options[question.correct]}`);
+                }
+                document.querySelectorAll('#options button').forEach(button => {
+                    button.disabled = true;
+                });
+                document.getElementById('question-bubble-' + currentQuestion).classList.add('bg-blue-500');
+            }
+
+            function updateQuestionBubbles() {
+                const bubblesContainer = document.getElementById('question-bubbles');
+                bubblesContainer.innerHTML = '';
+                questions.forEach((_, index) => {
+                    const bubble = document.createElement('div');
+                    bubble.id = 'question-bubble-' + index;
+                    bubble.classList.add('w-8', 'h-8', 'bg-white', 'border', 'border-gray-400', 'rounded-full', 'mx-1');
+                    bubblesContainer.appendChild(bubble);
+                });
+            }
+
+            function updateProgressBar() {
+                const progressBarFull = document.getElementById('progress-bar-full');
+                progressBarFull.style.width = ((currentQuestion + 1) / questions.length) * 100 + '%';
+            }
+
+            document.getElementById('prev-question').addEventListener('click', () => {
+                if (currentQuestion > 0) {
+                    currentQuestion--;
+                    loadQuestion();
+                }
+            });
+
+            document.getElementById('next-question').addEventListener('click', () => {
+                if (currentQuestion < questions.length - 1) {
+                    currentQuestion++;
+                    loadQuestion();
+                }
+            });
+        });
+    </script>
+
+    
+</body>
+</html>
+
