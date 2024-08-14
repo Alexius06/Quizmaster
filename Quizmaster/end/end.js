@@ -3,10 +3,11 @@ let  correctAnswers  =  localStorage.getItem('correctAnswers')
 let  counter  = localStorage.getItem('counter')
 let  MaxQuestions = localStorage.getItem('MaxQuestions')     
 let score =localStorage.getItem('score');
-let TimeSpent = localStorage.getItem('timeSpent');
+let MinutesSpent =  localStorage.getItem('minutesSpent');   
+let SecondsSpent = localStorage.getItem('secondsSpent');   
 let Attempts = localStorage.getItem('Attempts');      
 let Scoretext = document.getElementById('Score');
-let  Attempted = document.getElementById('Attempted');      
+let  Attempted = document.getElementById('Attempted');     
 let  Correctno = document.getElementById('Correct');   
 let  correctContain  = document.getElementById('correct-contain');   
 let  correctiondiv = document.getElementById('correction'); 
@@ -26,13 +27,55 @@ else if (counter === null) {
 
 console.log(counter)
 
+window.onload = function() {
+    const userName = localStorage.getItem('userName');
+    const profilePic = localStorage.getItem('selectedPic');
+    function checkSession() {
+        
+        if (userName && profilePic) {
+            setTimeout(clearSession, 7200000);
+        }
+    }
+    
+    function clearSession() {
+        localStorage.removeItem('userName');
+        localStorage.removeItem('selectedPic');
+        window.location.assign('../index/index.html');  
+    }
+    
+    checkSession();
 
+    document.getElementById('logout').addEventListener('click', () => {         
+        clearSession(); 
+    });
+    if (!userName || !profilePic) {
+        window.location.assign('../index/index.html');
+    } else {
+        document.getElementById('display-name').textContent =`CONGRATS! on completing this quiz ${userName}`;
+        const img  =  document.createElement('img');
+        img.src =   profilePic
+        img.alt =  'Profile Pic';   
+        img.classList.add('rounded-full','w-16','h-16');
+        document.getElementById('profile-pic').innerHTML = '';
+        document.getElementById('profile-pic').appendChild(img);    
+    }
+};
 
 
 Correctno.innerHTML = 'you got '+ counter+'/'+MaxQuestions+' questions correct'; 
      
 Attempted.innerHTML =  Attempts +'/'+MaxQuestions;  
-Time.innerHTML = 'You spent '+TimeSpent+' seconds on the quiz'; 
+if (MinutesSpent<1){
+    MinutesSpent = ''
+}
+else if (MinutesSpent ==  1){
+    MinutesSpent = MinutesSpent +' minute '  
+}
+else{
+    MinutesSpent = MinutesSpent + ' minutes '   
+}
+console.log (MinutesSpent   )
+Time.innerHTML = 'You spent '+MinutesSpent+SecondsSpent+' seconds on the quiz'; 
 if (score === null) {
     score = 0;
     localStorage.setItem('score', score);

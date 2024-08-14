@@ -18,7 +18,7 @@
 }
 
 
-#home{
+.home{
     height: 10%;
 }
 h1 {
@@ -49,6 +49,10 @@ h3{
     padding: 2rem;
     
 }
+.selectedpp { 
+    background-color: red
+    
+};
 
 
 

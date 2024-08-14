@@ -13,66 +13,84 @@ let availableQuestions = [];
 let  questionIndex = 0; 
 let currentIndex = -1;
 let history = [];
-const TOTAL_TIME = 60;
 let questionCounter = 0;
-let  Attempts = 0;
-let questions = [
-    {
-        question: 'Inside which HTML element do we put the JavaScript??',
-        choice1: '<script>',
-        choice2: '<javascript>',
-        choice3: '<js>',
-        choice4: '<scripting>',
-        answer: 1,
-    },
-    {
-        question:
-            "What is the correct syntax for referring to an external script called 'xxx.js'?",
-        choice1: "<script href='xxx.js'>",
-        choice2: "<script name='xxx.js'>",
-        choice3: "<script src='xxx.js'>",
-        choice4: "<script file='xxx.js'>",
-        answer: 3,
-    },
-    {
-        question: " How do you write 'Hello World' in an alert box?",
-        choice1: "msgBox('Hello World');",
-        choice2: "alertBox('Hello World');",
-        choice3: "msg('Hello World');",
-        choice4: "alert('Hello World');",
-        answer: 4,
-    },
-    
-];
-const CORRECT_BONUS = 10;
-const MAX_QUESTIONS = questions.length;
-localStorage.setItem('MaxQuestions', MAX_QUESTIONS )
 
+let  Attempts = 0;
+let questions = [];
+
+fetch('https://opentdb.com/api.php?amount=10&category=18&difficulty=medium&type=multiple')
+    .then((res) => {
+        return res.json();
+    })
+    .then((loadedQuestions) => {
+        console.log(loadedQuestions.results)
+        questions = loadedQuestions.results.map((loadedQuestion) => {
+            const formattedQuestion = {
+                question: loadedQuestion.question,
+            };
+
+            const answerChoices = [...loadedQuestion.incorrect_answers];
+            formattedQuestion.answer = Math.floor(Math.random() * 4) + 1;
+            answerChoices.splice(
+                formattedQuestion.answer - 1,
+                0,
+                loadedQuestion.correct_answer
+            );
+
+            answerChoices.forEach((choice, index) => {
+                formattedQuestion['choice' + (index + 1)] = choice;
+            });
+            
+            return formattedQuestion;
+        });
+        startGame();
+        
+    })
+    .catch((err) => {
+        console.error(err);
+    });
+
+const CORRECT_BONUS = 10;
+let  MAX_QUESTIONS;
 let answeredQuestions = new Set();
 let selectedAnswers = {};
+let time; 
+
 startGame = () => {   
     questionCounter = 0;
     score = 0;
     counter = 0;
     startTime = new Date().getTime();
-    startTimer();    
+        
     availableQuestions = [...questions];
     incorrectQuestions = [];
     correctAnswers = [];
+    MAX_QUESTIONS = questions.length;    
+    time=  54  *  MAX_QUESTIONS;
+    
+    startTimer();
+    localStorage.setItem('MaxQuestions', MAX_QUESTIONS )
     localStorage.removeItem('incorrectQuestions');
     localStorage.removeItem('correctAnswers');
     localStorage.removeItem('Attempts');
     localStorage.removeItem('score');   
-    localStorage.removeItem('counter');     
+    localStorage.removeItem('counter');  
+    console.log(questions)   
     console.log(availableQuestions);
     getNewQuestion();
+    
+    
 };
 function startTimer() {
-    let timeLeft = TOTAL_TIME;
-
+    let timeLeft = time;
+    let minutes,  seconds;
     const timerInterval = setInterval(() => {
+        minutes=Math.floor(timeLeft/ 60);
+        seconds = timeLeft % 60;    
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
         timeLeft--;
-        timerDisplay.innerHTML = `${timeLeft}s`;
+        timerDisplay.textContent = minutes+':'+seconds;
 
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
@@ -87,18 +105,23 @@ function roundUp(num) {
 
 function updateQuestionBubbles() {
     const bubblesContainer = document.getElementById('question-bubbles');
-    bubblesContainer.innerHTML = ''; // Clear existing bubbles
-
+    bubblesContainer.innerHTML = '';  
     questions.forEach((_, index) => {
         const bubble = document.createElement('div');
         bubble.id = 'question-bubble-' + index;
         bubble.classList.add('w-8', 'h-8', 'flex', 'items-center', 'justify-center', 'text-white', 'border', 'border-gray-400', 'rounded-full', 'm-1');
-        bubble.innerText = index + 1; // Add question number inside the bubble
-
-        if (answeredQuestions.has(index)) {
+        bubble.innerText = index + 1;
+        
+        if (index === questionCounter - 1) {
+            bubble.classList.add('bg-yellow-500', 'cursor-pointer');
+            bubble.addEventListener('click', () => goToQuestion(index));
+        }
+        else if (answeredQuestions.has(index)) {
             bubble.classList.add('bg-blue-500', 'cursor-pointer'); // Blue for answered questions
             bubble.addEventListener('click', () => goToQuestion(index)); // Click event to go to the question
-        } else {
+        } 
+        
+        else {
             bubble.classList.add('bg-gray-400'); // Gray for unanswered questions
         }
 
@@ -124,14 +147,17 @@ getNewQuestion = () => {
     history = history.slice(0, currentIndex + 1); 
     history.push({ index: questionIndex, question: currentQuestion });
     currentIndex = history.length - 1;
-    
+    options.forEach((option)=>{
+        option.classList.remove('selected');
+    })
     renderQuestion();  
     updateQuestionBubbles();
 };
 function renderQuestion() {
-    Questioncount.innerHTML = questionIndex + "/" + MAX_QUESTIONS;
-    
+    Questioncount.innerHTML = questionIndex + "/" + MAX_QUESTIONS;    
     progressbarfull.innerHTML = roundUp(questionCounter / MAX_QUESTIONS) * 100 + "%";
+    console.log(questionCounter/ MAX_QUESTIONS )
+
     question.innerText = currentQuestion.question;
 
     options.forEach(option => {
@@ -170,14 +196,14 @@ document.getElementById('next-question').addEventListener('click', () => {
 });
 let incorrectQuestions = [];
 let correctAnswers = [];
-options.forEach((option) => {  
+options.forEach((option) => {   
     option.addEventListener('click', e => {
         if(!acceptinganswers) return;
         acceptinganswers=false; 
             
         const selectedOption = e.target;    
         const selectedAnswer = selectedOption.dataset['number'];
-        
+        options.forEach((opt) => {opt.classList.remove('selected'); });    
         selectedOption.classList.add('selected'); 
         Attempts++; 
         answeredQuestions.add(questionCounter - 1);
@@ -212,11 +238,49 @@ options.forEach((option) => {
           
     });
  });
+
+    
+
+window.onload = function() {
+    const userName = localStorage.getItem('userName');
+    const profilePic = localStorage.getItem('selectedPic');
+    function checkSession() {
+        
+        if (userName && profilePic) {
+            setTimeout(clearSession, 7200000);
+        }
+        
+    }
+    
+    function clearSession() {
+        localStorage.removeItem('userName');
+        localStorage.removeItem('selectedPic');
+        window.location.assign('../index/index.html');  
+    }
+    
+    checkSession();
+    
+
+    if (!userName || !profilePic) {
+        window.location.assign('../index/index.html');
+    } else {
+        document.getElementById('display-name').textContent ='Hi,'+ userName;
+        const img  =  document.createElement('img');
+        img.src =   profilePic
+        img.alt =  'Profile Pic';   
+        img.classList.add('rounded-full','w-16','h-16');
+        document.getElementById('profile-pic').innerHTML = '';
+        document.getElementById('profile-pic').appendChild(img);  
+    }
+};
 function endQuiz() {
     endTime = new Date().getTime();
     const timeSpent = Math.floor((endTime - startTime) / 1000);
+    minutesSpent  = Math.floor(timeSpent/ 60);
+    secondsSpent = timeSpent % 60;  
     localStorage.setItem('Attempts',  Attempts);       
-    localStorage.setItem('timeSpent', timeSpent);    
+    localStorage.setItem('minutesSpent', minutesSpent);    
+    localStorage.setItem('secondsSpent', secondsSpent);    
     window.location.assign('../end/end.html');
 }
 incrementScore = num =>  {
@@ -224,5 +288,3 @@ incrementScore = num =>  {
     localStorage.setItem('score', score);   
        
 };
-
-startGame();

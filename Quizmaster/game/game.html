@@ -13,13 +13,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400..700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <img src="" alt="">
     <h1 class="text-center  mt-5"  style="margin-bottom: 0;">QuizMaster!</h1>
+    
     <div  class="body  m-2">
         <div class="container p-1">
             <div id="game" class="items-center flex flex-col">
                 
-                <div  class="flex-col flex justify-center" >
+                <div  class="flex-col flex  w-full justify-center" >
+                    <div  class="w-full  flex items-center  justify-center"><div id="profile-pic"></div><div id="display-name"></div></div>
+                    
                     <div class="hud flex justify-around">
+                        
                         <div id="hud-item">
                             <p   class="hud-prefix text-center text-4xl">
                                 Question
@@ -33,13 +38,13 @@
                                 Timer
                             </p>
                             <h1 class="hud-main-text text-center" id="Timer">
-                                60s
+                    
                             </h1>
                         </div>
             
                     </div>
-                    <div id="question-bubbles"  class="flex flex-wrap justify-center mx-auto pb-2  max-w-xs"></div>
-                    <div  id="progress-bar" class="mx-auto flex items-center justify-start progress-bar-striped progress-bar-animated">
+                    <div id="question-bubbles"  class="flex flex-wrap justify-center mx-auto pb-2  max-w-md"></div>
+                    <div  id="progress-bar" class="mx-auto flex items-center  justify-start  progress-bar-striped progress-bar-animated">
                         <div id="progress-bar-full"  class  ="flex  justify-center items-center">
                             fjhgfghjhgfghjhgfdfgh
                         </div>    
@@ -65,8 +70,9 @@
 
                 </div>
                 <div class="flex justify-between md:justify-center">
-                    <button id="prev-question" class="px-4 py-2 btn text-white"><img src="./back.png" alt="" srcset=""></button>
-                    <button id="next-question" class="px-4 py-2 btn text-white"><img src="./forward.png" alt="" srcset=""></button>
+                    <button id="prev-question" class="px-4 py-2 btn rounded-full text-white"><img src="./back.png"  class="rounded-full" alt="" srcset=""></button>
+                    
+                    <button id="next-question" class="px-4 py-2 btn rounded-full text-white"><img src="./forward.png"  class="rounded-full" alt="" srcset=""></button>
                 </div>
         </div> 
     </div>
