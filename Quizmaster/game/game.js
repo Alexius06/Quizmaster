@@ -165,6 +165,7 @@ function renderQuestion() {
     progressbarfull.innerHTML = Math.ceil(roundUp(questionCounter / MAX_QUESTIONS) * 100) + "%";
     
     // console.log(questionCounter/ MAX_QUESTIONS )
+    // console.log(questionCounter)
 
     question.innerText = currentQuestion.question;
 
