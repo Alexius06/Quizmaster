@@ -50,7 +50,7 @@ h3{
     
 }
 .selectedpp { 
-    background-color: red
+    border: solid 1px black
     
 };
 
