@@ -20,7 +20,7 @@ let questionCounter = 0;
 let  Attempts = 0;
 let questions = [];
 
-fetch('https://opentdb.com/api.php?amount=50&category=18&difficulty=medium&type=multiple')
+fetch('https://opentdb.com/api.php?amount=20&category=18&difficulty=medium&type=multiple')
     .then((res) => {
         return res.json();
     })
@@ -161,8 +161,10 @@ getNewQuestion = () => {
     updateQuestionBubbles();
 };
 function renderQuestion() {
-    Questioncount.innerHTML = questionIndex + "/" + MAX_QUESTIONS;    
+    Questioncount.innerHTML = questionIndex + "/" + MAX_QUESTIONS; 
+    questionCounter = questionIndex;   
     progressbarfull.innerHTML = Math.ceil(roundUp(questionCounter / MAX_QUESTIONS) * 100) + "%";
+    
     
     // console.log(questionCounter/ MAX_QUESTIONS )
     // console.log(questionCounter)
@@ -186,6 +188,7 @@ function renderQuestion() {
 
 document.getElementById('prev-question').addEventListener('click', () => {
     if (currentIndex > 0) {
+        currentIndex  =  questionIndex-1
         currentIndex--;
         const previousQuestion = history[currentIndex];
         questionIndex = previousQuestion.index;
