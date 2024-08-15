@@ -75,7 +75,7 @@ else if (MinutesSpent ==  1){
 else{
     MinutesSpent = MinutesSpent + ' minutes '   
 }
-console.log (MinutesSpent   )
+console.log (MinutesSpent)
 Time.innerHTML = 'You spent '+MinutesSpent+SecondsSpent+' seconds on the quiz'; 
 
 
