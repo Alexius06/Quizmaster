@@ -2,7 +2,8 @@ let  incorrectQuestions  =  localStorage.getItem('incorrectQuestions')
 let  correctAnswers  =  localStorage.getItem('correctAnswers')
 let  counter  = localStorage.getItem('counter')
 let  MaxQuestions = localStorage.getItem('MaxQuestions')     
-let score =localStorage.getItem('score');
+const CORRECT_BONUS = 10;
+let score =counter*CORRECT_BONUS
 let MinutesSpent =  localStorage.getItem('minutesSpent');   
 let SecondsSpent = localStorage.getItem('secondsSpent');   
 let Attempts = localStorage.getItem('Attempts');      
@@ -76,10 +77,7 @@ else{
 }
 console.log (MinutesSpent   )
 Time.innerHTML = 'You spent '+MinutesSpent+SecondsSpent+' seconds on the quiz'; 
-if (score === null) {
-    score = 0;
-    localStorage.setItem('score', score);
-}
+
 
 Scoretext.innerHTML = score;
 const summaryContainer = document.querySelector('.summary-container');
