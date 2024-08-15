@@ -20,7 +20,7 @@ let questionCounter = 0;
 let  Attempts = 0;
 let questions = [];
 
-fetch('https://opentdb.com/api.php?amount=50&category=18&difficulty=medium&type=multiple')
+fetch('https://opentdb.com/api.php?amount=20&category=18&difficulty=medium&type=multiple')
     .then((res) => {
         return res.json();
     })
