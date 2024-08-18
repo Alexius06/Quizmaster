@@ -16,7 +16,7 @@ let  questionIndex = 0;
 let currentIndex = -1;
 let history = [];
 let questionCounter = 0;
-
+let bubblecount;
 let  Attempts = 0;
 let questions = [];
 
@@ -64,6 +64,7 @@ let time;
 
 startGame = () => {   
     questionCounter = 0;
+    bubblecount = 0;    
     score = 0;
     counter = 0;
     startTime = new Date().getTime();
@@ -119,7 +120,7 @@ function updateQuestionBubbles() {
         bubble.classList.add('w-8', 'h-8', 'flex', 'items-center', 'justify-center', 'text-white', 'border', 'border-gray-400', 'rounded-full', 'm-1');
         bubble.innerText = index + 1;
         
-        if (index === questionCounter - 1) {
+        if (index === bubblecount-1 ) {
             bubble.classList.add('bg-yellow-500', 'cursor-pointer');
             bubble.addEventListener('click', () => goToQuestion(index));
         }
@@ -147,10 +148,10 @@ getNewQuestion = () => {
         endQuiz();
         return;
     }
-    
     currentQuestion = questions[questionCounter];
     questionIndex = questionCounter + 1; 
     questionCounter++;
+    bubblecount  =  questionCounter>bubblecount ? questionCounter: bubblecount;
     history = history.slice(0, currentIndex + 1); 
     history.push({ index: questionIndex, question: currentQuestion });
     currentIndex = history.length - 1;
@@ -221,14 +222,22 @@ options.forEach((option) => {
         answeredQuestions.add(questionCounter - 1);
         selectedAnswers[questionCounter - 1] = selectedAnswer;
             
-        if  (selectedAnswer == currentQuestion.answer){
-            
-            counter++;  
-            incrementScore(CORRECT_BONUS);
-            // console.log(counter);    
-            localStorage.setItem('counter', counter);         
-        }      
-        else  if(selectedAnswer !==  currentQuestion.answer){
+        let questionId = currentQuestion.id;
+        let previousAnswer = localStorage.getItem(`question_${questionId}`);
+
+        if (selectedAnswer == currentQuestion.answer) {
+            if (previousAnswer !== 'correct') {
+                counter++;
+                localStorage.setItem('counter', counter);
+            }
+            localStorage.setItem(`question_${questionId}`, 'correct');
+        } 
+        else if(selectedAnswer !==  currentQuestion.answer){
+            if (previousAnswer === 'correct') {
+                counter--;
+                localStorage.setItem('counter', counter);
+            }
+            localStorage.setItem(`question_${questionId}`, 'incorrect');
             let questionNumber = questionCounter;
             let correctAnswer = currentQuestion['choice' + currentQuestion.answer];
             // console.log(correctAnswer);
