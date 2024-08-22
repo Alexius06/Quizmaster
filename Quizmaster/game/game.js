@@ -282,7 +282,7 @@ window.onload = function() {
     checkSession();
     
 
-    if (!userName || !profilePic) {
+    if (!userName) {
         window.location.assign('../index/index.html');
     } else {
         document.getElementById('display-name').textContent ='Hi,'+ userName;
