@@ -125,7 +125,7 @@ savebtn.addEventListener('click', async function() {
                 email: register_email,
                 selectedPic: selectedPic,
             });
-
+            localStorage.setItem('userName', name);
             document.getElementById('regsuccess').innerText = 'Registered successfully';
             setTimeout(() => {
                 window.location.assign('../game/game.html');
