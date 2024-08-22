@@ -26,10 +26,27 @@
     </div>
     <div id="profileSetup" class="container  text-center items-center grid md:grid-cols-2 grid-cols-1  hidden justify-center  " >
         
-        <h1  class="h-full flex justify-center items-end md:items-center"><i  id="backbtn" class="fa-regular fa-circle-left text-6xl pb-9 md:p-0 "></i>Register!</h1>
+        <h1  class="h-full flex justify-center items-end md:items-center"><i  id="backbtn" onclick="back('backbtn','profileSetup')" class="fa-regular fa-circle-left text-6xl pb-9 md:p-0 "></i>Register!</h1>
         <div id="register"  class="flex  flex-col bg-white justify-start md:justify-center rounded items-start  h-fit  p-3  " >
             <label  class="m-4">Name:</label>
-            <input type="text"  id="nameInput" name=""  placeholder="Enter your  name" class="rounded h-10 items-center  p-3  border  w-full">
+            <input type="text"  id="nameInput" name="nameInput"  placeholder="Enter your  name" class="rounded h-10 items-center  p-3  border  w-full">
+            <label  class="m-4">Email:</label>
+            <input type="email"  id="register_email" name="register_email"  placeholder="Enter your  Email" class="rounded h-10 items-center  p-3  border  w-full">
+            <label  class="m-4">Password:</label>
+            <div class="relative  w-full">
+                <input type="password"  id="regpwd" name="regpwd"  min="8"  max="20" placeholder="Enter new  password" class="rounded h-10 items-center  p-3  border  w-full">
+                <span id="togglepwd1"  onclick="togglePasswordVisibility('regpwd','togglepwd1')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 cursor-pointer">
+                    👁️
+                </span>
+            </div>
+            <label  class="m-4">Confirm password:</label>
+            <div class="relative  w-full">
+                <input type="password"  id="regcpwd" name="regcpwd" min="8"  max="20"  placeholder="Confirm your  password" class="rounded h-10 items-center  p-3  border  w-full">
+                <span id="togglepwd2"  onclick="togglePasswordVisibility('regcpwd','togglepwd2')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 cursor-pointer">
+                    👁️
+                </span>
+            </div>
+            
             <label class="m-4">Choose your  Profile picture: </label>
             <div class=" grid place-items-center  w-full grid-cols-3 gap-3">
                 <img src="../Assets/pic-1.png" class="w-16 h-16 rounded-full Profile" data-pic="../Assets/pic-1.png">
@@ -40,7 +57,11 @@
                 <img src="../Assets/pic-6.png" class="w-16 h-16 rounded-full Profile" data-pic="../Assets/pic-6.png">
                     
             </div>
+            <div  id="logrequest" class="w-full text-center text-blue-500 cursor-pointer underline">Already have an account?</div>
+            <div  id="regsuccess" class="w-full flex justify-center items-center underline  text-green-500"></div>
             <div  id="regerror" class="w-full flex justify-center items-center underline  text-red-500"></div>
+            <div  id="pwderror" class="w-full flex justify-center items-center underline  text-red-500"></div>
+            
             <div  class="w-full flex m-4  ml-0 justify-center">
                 <button  id="save" class="text-center h-8 flex items-center w-fit pl-4 pr-4 pt-2 pb-2 rounded  justify-center border">
                     Register
@@ -49,6 +70,35 @@
              
         </div>
     </div>
+    <div id="profileLogin" class="container  text-center items-center grid md:grid-cols-2 grid-cols-1  hidden justify-center  " >
+        
+        <h1  class="h-full flex justify-center items-end md:items-center"><i  id="backbtn1" onclick="back('backbtn1','profileLogin')"  class="fa-regular fa-circle-left text-6xl pb-9 md:p-0 "></i>Login!</h1>
+        <div id="Login"  class="flex  flex-col bg-white justify-start md:justify-center rounded items-start  h-fit  p-3  " >
+            <label  class="m-4">Email:</label>
+            <input type="email"  id="login_email" name=""  placeholder="Enter your  Email" class="rounded h-10 items-center  p-3  border  w-full">
+            <label  class="m-4">Password:</label>
+            <div class="relative  w-full">
+                <input type='password' id="logpwd" placeholder="Enter your password" class="rounded h-10 p-3 border w-full pr-10">
+                <span id="togglepwd"  onclick="togglePasswordVisibility('logpwd','togglepwd')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 cursor-pointer">
+                    👁️
+                </span>
+            </div>
+            <div  id="regrequest" class="w-full text-center text-blue-500 cursor-pointer underline">I don't have an account yet!</div>
+            <div  id="logsuccess" class="w-full text-center text-green-500 underline"></div>
+            
+            
+            <div  id="logerror" class="w-full flex justify-center items-center underline  text-red-500"></div>
+            <div  class="w-full flex m-4  ml-0 justify-center">
+                <button  id="verify" class="text-center h-8 flex items-center w-fit pl-4 pr-4 pt-2 pb-2 rounded  justify-center border">
+                    login
+                </button> 
+            </div>
+             
+        </div>
+    </div>
     <script src="app.js"></script>
+    <script type="module" src="firebase.js"></script>
+
+    
 </body>
 </html>
