@@ -71,7 +71,9 @@ playbtn.addEventListener('click', function() {
 verify.addEventListener('click', async function() {
     const login_email = document.getElementById('login_email').value;
     const logpwd = document.getElementById('logpwd').value;
-
+    document.getElementById('logerror').innerText = '';
+    verify.disabled = true;
+    verify.innerText = 'Verifying...';
     if (login_email && logpwd) {
         try {
             // Sign in the user
@@ -87,16 +89,17 @@ verify.addEventListener('click', async function() {
                 localStorage.setItem('userName', userData.name);
                 localStorage.setItem('selectedPic', userData.selectedPic);
                 document.getElementById('logsuccess').innerText = 'Login successful';
-                document.getElementById('logerror').innerText = '';
-
-                setTimeout(() => {
-                    window.location.assign('../game/game.html');
-                }, 1000);
+                document.getElementById('logerror').innerText = '';                
+                document.getElementById('profileLogin').classList.add('hidden');       ;
+                document.getElementById('home2').classList.remove('hidden');       ;
+                
             } else {
                 document.getElementById('logerror').innerText = 'User data not found';
             }
         } catch (error) {
             document.getElementById('logerror').innerText = '*Incorrect email or password';
+            verify.disabled = false;
+            verify.innerText = 'Login';
         }
     } else {
         document.getElementById('logerror').innerText = '*Please input your email and password';
@@ -104,16 +107,19 @@ verify.addEventListener('click', async function() {
 });    
 
 savebtn.addEventListener('click', async function() {
+    document.getElementById('regerror').innerText = '';
     const name = document.getElementById('nameInput').value;
     var regpwd = document.getElementById('regpwd').value;  
     var regcpwd = document.getElementById('regcpwd').value;
-    var  register_email = document.getElementById('register_email').value;  
+    var  register_email = document.getElementById('register_email').value;    
+    savebtn.disabled = true;
+    savebtn.innerText = 'Registering...';
     if (regpwd !== regcpwd) {
         document.getElementById('pwderror').innerText = '*Passwords do not match';
     } 
     else if (name && selectedPic && register_email && regpwd) {
         document.getElementById('pwderror').innerText = '';
-
+    
         try {
             // Create a new user
             const userCredential = await createUserWithEmailAndPassword(auth, register_email, regpwd);
@@ -124,12 +130,13 @@ savebtn.addEventListener('click', async function() {
                 name: name,
                 email: register_email,
                 selectedPic: selectedPic,
+                
             });
             localStorage.setItem('userName', name);
+            localStorage.setItem('selectedPic', selectedPic);
             document.getElementById('regsuccess').innerText = 'Registered successfully';
-            setTimeout(() => {
-                window.location.assign('../game/game.html');
-            }, 1000);
+            document.getElementById('profileSetup').classList.add('hidden');       
+            document.getElementById('home2').classList.remove('hidden');       
         } 
         catch (error) {
             if (error.code === 'auth/email-already-in-use') {                
@@ -138,10 +145,12 @@ savebtn.addEventListener('click', async function() {
             else {
                 console.log('Error:', error.message);
             }
+            
         }
     } else {
         document.getElementById('regerror').innerText = '*Please input all credentials';
     }
     
-    
+    savebtn.disabled = false;
+    savebtn.innerText = 'Register';
 });

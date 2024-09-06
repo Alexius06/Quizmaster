@@ -49,7 +49,7 @@ window.onload = function() {
     document.getElementById('logout').addEventListener('click', () => {         
         clearSession(); 
     });
-    if (!userName || !profilePic) {
+    if (!userName) {
         window.location.assign('../index/index.html');
     } else {
         document.getElementById('display-name').textContent =`CONGRATS! on completing this quiz ${userName}`;

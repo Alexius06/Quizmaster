@@ -5,7 +5,7 @@
 
 
 
-
+var  loginbtn  =document.getElementById('LOGIN');   
 var  playbtn  =document.getElementById('play');
 var  savebtn = document.getElementById('save'); 
 var  landingpg = document.getElementById('home');  
@@ -72,6 +72,16 @@ playbtn.addEventListener('click', function() {
         login.classList.remove('hidden');  
     } else {
         window.location.assign('../game/game.html');    
+    }
+});
+loginbtn.addEventListener('click', function() {
+    const name = document.getElementById('nameInput').value;
+    if (!name && selectedPic==null) {
+        
+        landingpg.classList.add('hidden');
+        login.classList.remove('hidden');  
+    } else {
+        document.getElementById('home2').classList.remove('hidden');       
     }
 });
 

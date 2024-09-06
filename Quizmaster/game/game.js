@@ -19,13 +19,14 @@ let questionCounter = 0;
 let bubblecount;
 let  Attempts = 0;
 let questions = [];
+let questionId;
 
-fetch('https://opentdb.com/api.php?amount=20&category=18&difficulty=medium&type=multiple')
+fetch('https://opentdb.com/api.php?amount=5&category=18&difficulty=medium&type=multiple')
     .then((res) => {
         return res.json();
     })
     .then((loadedQuestions) => {
-        // console.log(loadedQuestions.results)
+        console.log(loadedQuestions.results)
         questions = loadedQuestions.results.map((loadedQuestion) => {
             const formattedQuestion = {
                 question: loadedQuestion.question,
@@ -61,6 +62,7 @@ let  MAX_QUESTIONS;
 let answeredQuestions = new Set();
 let selectedAnswers = {};
 let time; 
+let questionstatus;
 
 startGame = () => {   
     questionCounter = 0;
@@ -81,9 +83,15 @@ startGame = () => {
     localStorage.removeItem('correctAnswers');
     localStorage.removeItem('Attempts');
     localStorage.removeItem('score');   
-    localStorage.removeItem('counter');  
+    localStorage.removeItem('counter');
+    for (let key in localStorage) {
+        if (key.startsWith('question_')) {
+            localStorage.removeItem(key);
+        }
+    }   
+     
     // console.log(questions)   
-    // console.log(availableQuestions);
+    console.log(availableQuestions);
     getNewQuestion();
     loader.classList.add('hidden'); 
     game.classList.remove('hidden');
@@ -140,24 +148,33 @@ function updateQuestionBubbles() {
 function goToQuestion(index) {
     currentQuestion = questions[index];
     questionIndex = index + 1;
+    questionId=questionIndex
+    questionstatus = localStorage.getItem(`question_${questionId}`);
     renderQuestion();
 }
 
 getNewQuestion = () => {    
     if (questionCounter >= MAX_QUESTIONS) {
-        endQuiz();
-        return;
+        setTimeout(endQuiz(),1000);
+    }        
+    currentQuestion = questions[questionCounter];    
+    questionIndex = questionCounter + 1;
+    questionId  =  questionIndex 
+    console.log('questionId:'+questionId);
+    questionstatus = localStorage.getItem(`question_${questionId}`); 
+    if (!questionstatus) {
+        localStorage.setItem(`question_${questionId}`, 'unanswered');
+        questionstatus = localStorage.getItem(`question_${questionId}`); ;
     }
-    currentQuestion = questions[questionCounter];
-    questionIndex = questionCounter + 1; 
     questionCounter++;
     bubblecount  =  questionCounter>bubblecount ? questionCounter: bubblecount;
     history = history.slice(0, currentIndex + 1); 
     history.push({ index: questionIndex, question: currentQuestion });
     currentIndex = history.length - 1;
-    options.forEach((option)=>{
-        option.classList.remove('selected');
-    })
+    // options.forEach(option => {
+    //     option.classList.remove('selected');
+    // });
+    
     renderQuestion();  
     updateQuestionBubbles();
 };
@@ -165,7 +182,7 @@ function renderQuestion() {
     Questioncount.innerHTML = questionIndex + "/" + MAX_QUESTIONS; 
     questionCounter = questionIndex;   
     progressbarfull.innerHTML = Math.ceil(roundUp(questionCounter / MAX_QUESTIONS) * 100) + "%";
-    
+    console.log(`question_${questionId}:${questionstatus}`);    
     
     // console.log(questionCounter/ MAX_QUESTIONS )
     // console.log(questionCounter)
@@ -173,13 +190,37 @@ function renderQuestion() {
     question.innerText = currentQuestion.question;
 
     options.forEach(option => {
-        const number = option.dataset['number'];
+        var number = option.dataset['number'];
+          
         option.innerText = currentQuestion['choice' + number];
         progressbarfull.style.width = (questionCounter / MAX_QUESTIONS) * 100 + "%";
-        option.parentElement.classList.remove('correct', 'incorrect', 'selected');
-        if (selectedAnswers[questionCounter - 1] === parseInt(number)) {
-            option.parentElement.classList.add('selected');
-        }   
+        option.classList.remove('correct', 'incorrect', 'selected');
+
+
+        if (questionstatus !== 'unanswered') {            
+            option.style.pointerEvents = 'none';
+        } else {            
+            option.style.pointerEvents = 'auto';
+        }
+        
+        if (selectedAnswers[questionId] === number) {
+            if (number  == currentQuestion.answer){
+            option.classList.add('correct');
+            }
+            else{
+                option.classList.add('incorrect');                  
+                options.forEach(opt => {
+                    console.log(opt.dataset['number']);
+                    console.log(currentQuestion.answer);
+                    if (opt.dataset['number'] == currentQuestion.answer) {
+                        opt.classList.add('correct');
+                    }
+                });
+            }
+            
+        } 
+        
+          
     });
 
     acceptinganswers = true;
@@ -194,7 +235,7 @@ document.getElementById('prev-question').addEventListener('click', () => {
         const previousQuestion = history[currentIndex];
         questionIndex = previousQuestion.index;
         currentQuestion = previousQuestion.question;
-        renderQuestion();
+        goToQuestion(currentIndex);
     };
 });
 
@@ -204,51 +245,104 @@ document.getElementById('next-question').addEventListener('click', () => {
         const nextQuestion = history[currentIndex];
         questionIndex = nextQuestion.index;
         currentQuestion = nextQuestion.question;
-        renderQuestion();
+        goToQuestion(currentIndex);
     };
 });
 let incorrectQuestions = [];
 let correctAnswers = [];
-options.forEach((option) => {   
-    option.addEventListener('click', e => {
-        if(!acceptinganswers) return;
-        acceptinganswers=false; 
-            
-        const selectedOption = e.target;    
-        const selectedAnswer = selectedOption.dataset['number'];
-        options.forEach((opt) => {opt.classList.remove('selected'); });    
-        selectedOption.classList.add('selected'); 
-        Attempts++; 
-        answeredQuestions.add(questionCounter - 1);
-        selectedAnswers[questionCounter - 1] = selectedAnswer;
-            
-        let questionId = currentQuestion.id;
-        let previousAnswer = localStorage.getItem(`question_${questionId}`);
 
-        if (selectedAnswer == currentQuestion.answer) {
-            if (previousAnswer !== 'correct') {
-                counter++;
-                localStorage.setItem('counter', counter);
-            }
-            localStorage.setItem(`question_${questionId}`, 'correct');
-        } 
-        else if(selectedAnswer !==  currentQuestion.answer){
-            if (previousAnswer === 'correct') {
-                counter--;
-                localStorage.setItem('counter', counter);
-            }
-            localStorage.setItem(`question_${questionId}`, 'incorrect');
-            let questionNumber = questionCounter;
-            let correctAnswer = currentQuestion['choice' + currentQuestion.answer];
-            // console.log(correctAnswer);
-            // console.log(questionNumber);                
+function updateCounter(increment) {
+    let counter = parseInt(localStorage.getItem('counter')) || 0;
+    counter += increment;
+    if (counter < 0){counter = 0;} // Prevent negative counter
+    console.log("counter:" + counter);
+    localStorage.setItem('counter', counter);
+}
+
+
+// Function to save the question's status and related data
+function saveQuestionStatus(questionId, status, correctAnswer = null, questionNumber = null) {
+    let incorrectQuestions = JSON.parse(localStorage.getItem('incorrectQuestions')) || [];
+    let correctAnswers = JSON.parse(localStorage.getItem('correctAnswers')) || [];
+
+    if (status === 'correct') {
+        let incorrectIndex = incorrectQuestions.indexOf(questionNumber);
+        if (incorrectIndex !== -1) {
+            incorrectQuestions.splice(incorrectIndex, 1);
+            correctAnswers.splice(incorrectIndex, 1);
+        }
+    } else if (status === 'incorrect') {
+        if (!incorrectQuestions.includes(questionNumber)) {
             incorrectQuestions.push(questionNumber);
             correctAnswers.push(correctAnswer);
-            // console.log(correctAnswers); 
-            // console.log(incorrectQuestions);                            
-            localStorage.setItem('incorrectQuestions', JSON.stringify(incorrectQuestions));
-            localStorage.setItem('correctAnswers', JSON.stringify(correctAnswers));
         }
+    }
+    
+    localStorage.setItem(`question_${questionId}`, status);
+    localStorage.setItem('incorrectQuestions', JSON.stringify(incorrectQuestions));
+    localStorage.setItem('correctAnswers', JSON.stringify(correctAnswers));
+}
+
+questionstatus = localStorage.getItem(`question_${questionId}`);
+
+options.forEach((option) => {   
+    option.addEventListener('click', e => {
+        if (!acceptinganswers) return;
+        acceptinganswers = false;
+
+        if (questionstatus !== 'unanswered') {
+            option.disabled  =true;
+        }
+        
+        const selectedOption = e.target;    
+        const selectedAnswer = selectedOption.dataset['number'];
+        options.forEach((opt) => opt.classList.remove('selected'));
+        selectedOption.classList.add('selected');
+        
+        Attempts++;
+        answeredQuestions.add(questionCounter - 1);
+        selectedAnswers[questionId] = selectedAnswer;
+        console.log(selectedAnswers);   
+
+        // Fetch the current status of the question
+        number = option.dataset['number'];
+        if (selectedAnswers[questionId] === number) {
+            if (number  == currentQuestion.answer){
+            option.classList.add('correct');
+            }
+            else{
+                option.classList.add('incorrect');                  
+                options.forEach(opt => {
+                    console.log(opt.dataset['number']);
+                    console.log(currentQuestion.answer);
+                    if (opt.dataset['number'] == currentQuestion.answer) {
+                        opt.classList.add('correct');
+                    }
+                });
+            }
+            
+        } 
+        // Check if the answer is correct
+        if (selectedAnswer == currentQuestion.answer) {
+            if (questionstatus !== 'correct') {
+                updateCounter(1);
+            }
+            saveQuestionStatus(questionId, 'correct', null, questionCounter);
+        } else {
+            // Check if the question was previously answered correctly
+            if (questionstatus === 'correct') {
+                updateCounter(-1);
+            }
+            let questionNumber = questionCounter;
+            let correctAnswer = currentQuestion['choice' + currentQuestion.answer];
+            saveQuestionStatus(questionId, 'incorrect', correctAnswer, questionNumber);
+        }
+        questionstatus = localStorage.getItem(`question_${questionId}`);
+        console.log(`questionstatus${questionId}:${questionstatus}`);
+        // Prepare for the next question
+        acceptinganswers = true;       // let questionId = questionIndex;
+        
+        
        
           
         if (questionCounter<=MAX_QUESTIONS) {
@@ -261,10 +355,11 @@ options.forEach((option) => {
  });
 
     
-
+   
 window.onload = function() {
     const userName = localStorage.getItem('userName');
     const profilePic = localStorage.getItem('selectedPic');
+    console.log(profilePic);
     function checkSession() {
         
         if (userName && profilePic) {
@@ -294,18 +389,18 @@ window.onload = function() {
         document.getElementById('profile-pic').appendChild(img);  
     }
 };
+
 function endQuiz() {
+     
     endTime = new Date().getTime();
     const timeSpent = Math.floor((endTime - startTime) / 1000);
     minutesSpent  = Math.floor(timeSpent/ 60);
     secondsSpent = timeSpent % 60;  
+    Attempts = Attempts>questionIndex ? questionIndex : Attempts;
+       
     localStorage.setItem('Attempts',  Attempts);       
     localStorage.setItem('minutesSpent', minutesSpent);    
     localStorage.setItem('secondsSpent', secondsSpent);    
     window.location.assign('../end/end.html');
 }
-incrementScore = num =>  {
-    score += num;
-    localStorage.setItem('score', score);   
-       
-};
+
